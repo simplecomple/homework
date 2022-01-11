@@ -1,0 +1,32 @@
+class Solution {
+public:
+    int findShortestSubArray(vector<int>& nums) {
+        //任意元素出现频数的最大值
+        //将每个元素映射到一个长度为3的数组
+        unordered_map<int,vector<int>>h;
+        for(int i = 0;i < nums.size();i++){
+            if(h.find(nums[i]) != h.end()){
+                h[nums[i]][0]++;
+                h[nums[i]][2] = i;
+            }
+            else{
+                h[nums[i]] = {1,i,i};
+            }
+        }
+        //通过这个数组求出最短“度”的子数组，并返回长度
+        int maxDegree = 0;
+        int minLen = 0;
+        for (auto& [_, vec] : h) {
+            if(maxDegree < vec[0]){
+                maxDegree = vec[0];
+                minLen = vec[2] - vec[1] + 1;
+            }
+            else if(maxDegree == vec[0]){
+                if(minLen > vec[2] - vec[1] + 1){
+                    minLen = vec[2] - vec[1] + 1;
+                }
+            }
+        }
+        return minLen;
+    }
+};

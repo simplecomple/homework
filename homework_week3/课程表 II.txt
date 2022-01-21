@@ -1,0 +1,37 @@
+class Solution {
+public:
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+        to = vector<vector<int>>(numCourses,vector<int>());
+        inDegree = vector<int>(numCourses,0);
+        for(vector<int>& prerequisite : prerequisites){
+            int ai = prerequisite[0];
+            int bi = prerequisite[1];//先修课程
+            to[bi].push_back(ai);
+            inDegree[ai]++;
+        }
+        queue<int> q;
+        for(int i = 0;i < inDegree.size();i++){
+            if(inDegree[i] == 0){
+                q.push(i);
+            }
+        }
+        //广度优先搜索
+        vector<int>lessons;
+        while(!q.empty()){
+            int x = q.front();
+            q.pop();
+            lessons.push_back(x);
+            for(int y:to[x]){
+                inDegree[y]--;
+                if(inDegree[y] == 0){
+                    q.push(y);
+                }
+            }
+        }
+        if(lessons.size() == numCourses) return lessons;
+        else return {};
+    }
+private:
+    vector<vector<int>> to;
+    vector<int> inDegree;
+};
